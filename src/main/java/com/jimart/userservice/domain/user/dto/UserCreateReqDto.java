@@ -19,11 +19,20 @@ public class UserCreateReqDto {
     @Size(min = 4, max = 15, message = "비밀번호는 4~15자 사이로 입력해주세요.")
     private String password;
 
+    @NotBlank(message = "이름 입력은 필수입니다.")
+    @Size(min = 2, max = 8, message = "이름은 2~8자 사이로 입력해주세요.")
+    private String name;
+
     @NotBlank(message = "이메일 입력은 필수입니다.")
     @Email(message = "이메일 형식으로 입력해주세요.")
     private String email;
 
-    @NotBlank(message = "이름 입력은 필수입니다.")
-    @Size(min = 2, max = 8, message = "이름은 2~8자 사이로 입력해주세요.")
-    private String name;
+    public UserDto toUserDto() {
+        return UserDto.builder()
+                .userId(userId)
+                .password(password)
+                .name(name)
+                .email(email)
+                .build();
+    }
 }

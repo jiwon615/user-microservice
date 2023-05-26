@@ -2,10 +2,7 @@ package com.jimart.userservice.domain.user.dto;
 
 import com.jimart.userservice.domain.user.User;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,9 +10,18 @@ public class UserDto {
 
     private String userId;
     private String password;
-    private String email;
     private String name;
+    private String email;
     private UserAuthorityType authority;
+
+    @Builder
+    private UserDto(String userId, String password, String name, String email, UserAuthorityType authority) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.email = email;
+        this.authority = authority;
+    }
 
     public User toEntity() {
         return User.builder()
@@ -23,8 +29,6 @@ public class UserDto {
                 .password(password)
                 .name(name)
                 .email(email)
-                .birthDate(birthDate)
-                .sex(sex)
                 .build();
     }
 }
