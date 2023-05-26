@@ -12,6 +12,7 @@ public class UserDto {
     private String password;
     private String name;
     private String email;
+    @Setter
     private UserAuthorityType authority;
 
     @Builder
@@ -29,6 +30,7 @@ public class UserDto {
                 .password(password)
                 .name(name)
                 .email(email)
+                .authority(authority)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.jimart.userservice.core.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +10,7 @@ public class ApiResponse<T> {
     private int code;
     private HttpStatus status;
     private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     public ApiResponse(HttpStatus status, String message, T data) {
@@ -16,14 +18,6 @@ public class ApiResponse<T> {
         this.status = status;
         this.message = message;
         this.data = data;
-    }
-
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
-        return new ApiResponse<>(httpStatus, message, data);
-    }
-
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
-        return of(httpStatus, httpStatus.name(), data);
     }
 
     public static <T> ApiResponse<T> ok(T data) {
@@ -36,5 +30,17 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> ok() {
         return of(HttpStatus.OK, null);
+    }
+
+    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
+        return of(httpStatus, httpStatus.name(), data);
+    }
+
+    public static <T> ApiResponse<T> orError(HttpStatus httpStatus, String errorMessage) {
+        return of(httpStatus, errorMessage, null);
+    }
+
+    private static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {
+        return new ApiResponse<>(httpStatus, message, data);
     }
 }
