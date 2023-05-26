@@ -7,6 +7,7 @@ import com.jimart.userservice.domain.user.dto.UserDto;
 import com.jimart.userservice.domain.user.dto.UserResDto;
 import com.jimart.userservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +22,14 @@ import static com.jimart.userservice.core.exception.ErrorMsgType.USER_NOT_FOUND;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResDto saveUser(UserDto request) {
         checkIfUserIdIsDuplicated(request.getUserId());
+
         request.setAuthority(UserAuthorityType.USER);
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = userRepository.save(request.toEntity());
         return UserResDto.of(user);
     }

@@ -5,6 +5,7 @@ import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import lombok.*;
 
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserDto {
 

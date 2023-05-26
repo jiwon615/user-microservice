@@ -1,10 +1,13 @@
 package com.jimart.userservice.core.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.jimart.userservice.core.exception.ErrorMsgType;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 @Getter
+@NoArgsConstructor
 public class ApiResponse<T> {
 
     private int code;
@@ -34,6 +37,10 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
         return of(httpStatus, httpStatus.name(), data);
+    }
+
+    public static <T> ApiResponse<T> orError(ErrorMsgType e) {
+        return of(e.getHttpStatus(), e.getMessage(), null);
     }
 
     public static <T> ApiResponse<T> orError(HttpStatus httpStatus, String errorMessage) {

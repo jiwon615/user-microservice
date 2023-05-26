@@ -11,5 +11,5 @@ public enum UserAuthorityType {
     USER("USER")
     ;
 
-    private final String authority;
+    private final String text;
 }
