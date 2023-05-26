@@ -3,13 +3,11 @@ package com.jimart.userservice.domain.user;
 import com.jimart.userservice.domain.common.BaseEntity;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "jimart_users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
