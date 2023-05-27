@@ -1,4 +1,4 @@
-package com.jimart.userservice.domain.user;
+package com.jimart.userservice.domain.user.entity;
 
 import com.jimart.userservice.domain.common.BaseEntity;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "jimart_users")
+@Table(name = "jimart_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 

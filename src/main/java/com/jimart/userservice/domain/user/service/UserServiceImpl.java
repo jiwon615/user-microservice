@@ -1,7 +1,7 @@
 package com.jimart.userservice.domain.user.service;
 
 import com.jimart.userservice.core.exception.CustomException;
-import com.jimart.userservice.domain.user.User;
+import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import com.jimart.userservice.domain.user.dto.UserDto;
 import com.jimart.userservice.domain.user.dto.UserResDto;

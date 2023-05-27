@@ -1,6 +1,6 @@
 package com.jimart.userservice.domain.user.dto;
 
-import com.jimart.userservice.domain.user.User;
+import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import lombok.Builder;
 import lombok.Getter;
