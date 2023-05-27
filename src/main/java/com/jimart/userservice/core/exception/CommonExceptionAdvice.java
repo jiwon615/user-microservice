@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static com.jimart.userservice.core.exception.ErrorMsgType.COMMON_SERVER_ERROR;
 
 @RestControllerAdvice
 @Slf4j
@@ -34,8 +34,8 @@ public class CommonExceptionAdvice {
     @ExceptionHandler(value = {Exception.class})
     public ApiResponse<Object> commonException(Exception e) {
         return ApiResponse.ofError(
-                INTERNAL_SERVER_ERROR,
-                "서버 에러"
+                COMMON_SERVER_ERROR.getHttpStatus(),
+                COMMON_SERVER_ERROR.getMessage()
         );
     }
 }
