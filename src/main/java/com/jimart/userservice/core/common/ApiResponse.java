@@ -23,6 +23,10 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
+    public static <T> ApiResponse<T> ok() {
+        return of(HttpStatus.OK, null);
+    }
+
     public static <T> ApiResponse<T> ok(T data) {
         return of(HttpStatus.OK, data);
     }
@@ -31,20 +35,16 @@ public class ApiResponse<T> {
         return of(HttpStatus.CREATED, data);
     }
 
-    public static <T> ApiResponse<T> ok() {
-        return of(HttpStatus.OK, null);
-    }
-
-    public static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
-        return of(httpStatus, httpStatus.name(), data);
-    }
-
-    public static <T> ApiResponse<T> orError(ErrorMsgType e) {
+    public static <T> ApiResponse<T> ofError(ErrorMsgType e) {
         return of(e.getHttpStatus(), e.getMessage(), null);
     }
 
-    public static <T> ApiResponse<T> orError(HttpStatus httpStatus, String errorMessage) {
+    public static <T> ApiResponse<T> ofError(HttpStatus httpStatus, String errorMessage) {
         return of(httpStatus, errorMessage, null);
+    }
+
+    private static <T> ApiResponse<T> of(HttpStatus httpStatus, T data) {
+        return of(httpStatus, httpStatus.name(), data);
     }
 
     private static <T> ApiResponse<T> of(HttpStatus httpStatus, String message, T data) {

@@ -17,7 +17,7 @@ public class CommonExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(BindException.class)
     public ApiResponse<Object> bindException(BindException e) {
-        return ApiResponse.orError(
+        return ApiResponse.ofError(
                 HttpStatus.BAD_REQUEST,
                 e.getBindingResult().getAllErrors().get(0).getDefaultMessage()
         );
@@ -25,7 +25,7 @@ public class CommonExceptionAdvice {
 
     @ExceptionHandler(value = {CustomException.class})
     public ApiResponse<Object> customException(CustomException e) {
-        return ApiResponse.orError(
+        return ApiResponse.ofError(
                 e.getErrorMsgType().getHttpStatus(),
                 e.getMessage()
         );
@@ -33,7 +33,7 @@ public class CommonExceptionAdvice {
 
     @ExceptionHandler(value = {Exception.class})
     public ApiResponse<Object> commonException(Exception e) {
-        return ApiResponse.orError(
+        return ApiResponse.ofError(
                 INTERNAL_SERVER_ERROR,
                 "서버 에러"
         );

@@ -41,6 +41,6 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
             errorMsgType = AUTH_USERNAME_NOT_FOUND;
         }
 
-        mapper.writeValue(response.getWriter(), ApiResponse.orError(errorMsgType));
+        mapper.writeValue(response.getWriter(), ApiResponse.ofError(errorMsgType));
     }
 }

@@ -24,6 +24,6 @@ public class AjaxAccessDeniedHandler implements AccessDeniedHandler {
         response.setStatus(FORBIDDEN.value());
         response.setContentType(APPLICATION_JSON_VALUE);
 
-        mapper.writeValue(response.getWriter(), ApiResponse.orError(AUTH_BAD_ACCESS));
+        mapper.writeValue(response.getWriter(), ApiResponse.ofError(AUTH_BAD_ACCESS));
     }
 }
