@@ -48,6 +48,7 @@ public class SecurityConfig {
             "/api/login/**",
             "/api/logout/**",
             "/api/v1/user/**",
+            "/**" // TODO: 임시 모두 허용
     };
 
     @Bean
