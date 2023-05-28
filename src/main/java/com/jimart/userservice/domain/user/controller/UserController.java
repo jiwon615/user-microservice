@@ -18,7 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("")
+    @PostMapping("/sign-up")
     public ApiResponse<UserResDto> saveUser(@Valid @RequestBody UserCreateReqDto request) {
         return ApiResponse.created(userService.saveUser(request.toUserDto()));
     }

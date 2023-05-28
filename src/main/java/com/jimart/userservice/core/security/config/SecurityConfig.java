@@ -47,7 +47,7 @@ public class SecurityConfig {
     private final String[] WHITE_LIST = new String[]{
             "/user-service/login/**",
             "/user-service/logout/**",
-            "/**" // TODO: 임시 모두 허용
+            "/user-service/v1/user/sign-up",
     };
 
     @Bean

@@ -10,9 +10,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -29,6 +31,7 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
+        // TODO; 추후 Seuciryt 전용 exception 만들어서 AuthenticationException 상속 받게 한 뒤 local msg 출력하도록 리팩토링
         ErrorMsgType errorMsgType = COMMON_SERVER_ERROR;
 
         if (exception instanceof BadCredentialsException) {
@@ -39,6 +42,8 @@ public class AjaxAuthenticationFailureHandler implements AuthenticationFailureHa
             errorMsgType = AUTH_CREDENTIAL_EXPIRED;
         } else if (exception instanceof UsernameNotFoundException) {
             errorMsgType = AUTH_USERNAME_NOT_FOUND;
+        } else if (exception instanceof InsufficientAuthenticationException) {
+            errorMsgType = AUTH_EMPTY_USER;
         }
 
         mapper.writeValue(response.getWriter(), ApiResponse.ofError(errorMsgType));

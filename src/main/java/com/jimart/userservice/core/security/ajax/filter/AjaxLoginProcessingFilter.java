@@ -1,11 +1,11 @@
 package com.jimart.userservice.core.security.ajax.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jimart.userservice.core.exception.CustomException;
 import com.jimart.userservice.core.security.ajax.token.AjaxAuthenticationToken;
-import com.jimart.userservice.domain.user.dto.UserDto;
+import com.jimart.userservice.domain.user.dto.LoginReqDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -28,27 +28,27 @@ public class AjaxLoginProcessingFilter extends AbstractAuthenticationProcessingF
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
         if (!isAjax(request)) {
-            throw new CustomException(AUTH_BAD_REQUEST);
+            throw new InsufficientAuthenticationException(AUTH_BAD_REQUEST.getMessage());
         }
 
-        UserDto userDto = objectMapper.readValue(request.getReader(), UserDto.class);
-        checkIfUserIsEmpty(userDto);
+        LoginReqDto loginReq = objectMapper.readValue(request.getReader(), LoginReqDto.class);
+        checkIfUserIsEmpty(loginReq);
 
-        return deliverTokenToAuthenticationManager(userDto);
+        return deliverTokenToAuthenticationManager(loginReq);
     }
 
     private boolean isAjax(HttpServletRequest request) {
         return "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
     }
 
-    private void checkIfUserIsEmpty(UserDto userDto) {
-        if (!StringUtils.hasText(userDto.getUserId()) || !StringUtils.hasText(userDto.getPassword())) {
-            throw new CustomException(AUTH_EMPTY_USER);
+    private void checkIfUserIsEmpty(LoginReqDto loginReq) {
+        if (!StringUtils.hasText(loginReq.getUserId()) || !StringUtils.hasText(loginReq.getPassword())) {
+            throw new InsufficientAuthenticationException(AUTH_EMPTY_USER.getMessage());
         }
     }
 
-    private Authentication deliverTokenToAuthenticationManager(UserDto userDto) {
-        AjaxAuthenticationToken token = new AjaxAuthenticationToken(userDto.getUserId(), userDto.getPassword());
+    private Authentication deliverTokenToAuthenticationManager(LoginReqDto loginReq) {
+        AjaxAuthenticationToken token = new AjaxAuthenticationToken(loginReq.getUserId(), loginReq.getPassword());
         return getAuthenticationManager().authenticate(token);
     }
 }

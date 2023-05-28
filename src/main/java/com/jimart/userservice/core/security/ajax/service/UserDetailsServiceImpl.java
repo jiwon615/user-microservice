@@ -6,6 +6,7 @@ import com.jimart.userservice.domain.user.dto.UserDto;
 import com.jimart.userservice.domain.user.dto.UserResDto;
 import com.jimart.userservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +31,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Optional<User> findUserOpt = userRepository.findByUserId(username);
 
         findUserOpt.map(UserResDto::of)
-                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new InsufficientAuthenticationException(USER_NOT_FOUND.getMessage()));
 
         List<GrantedAuthority> roles = new ArrayList<>();
         User findUser = findUserOpt.get();
@@ -42,6 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .password(findUser.getPassword())
                 .name(findUser.getName())
                 .email(findUser.getEmail())
+                .authority(findUser.getAuthority())
                 .build();
         return new UserContext(userDto, roles);
     }
