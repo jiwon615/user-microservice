@@ -36,8 +36,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
 
-    private final String LOGIN_URL = "/api/login";
-    private final String LOGOUT_URL = "/api/logout";
+    private final String LOGIN_URL = "/user-service/login";
+    private final String LOGOUT_URL = "/user-service/logout";
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -45,9 +45,8 @@ public class SecurityConfig {
     }
 
     private final String[] WHITE_LIST = new String[]{
-            "/api/login/**",
-            "/api/logout/**",
-            "/api/v1/user/**",
+            "/user-service/login/**",
+            "/user-service/logout/**",
             "/**" // TODO: 임시 모두 허용
     };
 
