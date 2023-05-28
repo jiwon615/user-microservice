@@ -36,8 +36,8 @@ public class SecurityConfig {
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
 
-    private final String LOGIN_URL = "/user-service/login";
-    private final String LOGOUT_URL = "/user-service/logout";
+    private final String LOGIN_URL = "/api/v1/login";
+    private final String LOGOUT_URL = "/api/v1/logout";
 
     public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
         this.authenticationConfiguration = authenticationConfiguration;
@@ -45,9 +45,10 @@ public class SecurityConfig {
     }
 
     private final String[] WHITE_LIST = new String[]{
-            "/user-service/login/**",
-            "/user-service/logout/**",
-            "/user-service/v1/user/sign-up",
+            LOGIN_URL,
+            LOGOUT_URL,
+            "/health_check",
+            "/api/v1/user/sign-up",
     };
 
     @Bean
