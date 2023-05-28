@@ -49,6 +49,7 @@ public class SecurityConfig {
             LOGOUT_URL,
             "/health_check",
             "/api/v1/user/sign-up",
+            "/api/v1/user/**", // 임시
     };
 
     @Bean
