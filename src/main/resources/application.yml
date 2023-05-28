@@ -25,3 +25,7 @@ eureka:
         defaultZone: http://127.0.0.1:8761/eureka
 greeting:
   message: Welcome to Jimart Project
+
+jwt:
+  expiration_time: 864000 # one day (60s * 60m * 24h * 1000)
+  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK=
