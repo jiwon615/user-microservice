@@ -20,10 +20,11 @@ public class UserTestController {
                         "serverPort=> %s, " +
                         "jwt secret=> %s, " +
                         "jwt expiration=> %s",
+                        "test message=> %s",
                 env.getProperty("local.server.port"),
                 env.getProperty("server.port"),
                 env.getProperty("jwt.secret"),
-                env.getProperty("jwt.expiration_time"));
+                env.getProperty("test.message"));
     }
 
     @GetMapping("/welcome")
