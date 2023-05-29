@@ -52,6 +52,7 @@ public class SecurityConfig {
             LOGIN_URL,
             LOGOUT_URL,
             "/health_check",
+            "/actuator/**",
             "/api/v1/user/sign-up",
             "/api/v1/user/**", // 임시
             "/**", // 임시

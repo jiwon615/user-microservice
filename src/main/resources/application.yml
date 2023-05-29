@@ -26,6 +26,11 @@ eureka:
 greeting:
   message: Welcome to Jimart Project
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
 # spring cloud config service에서 가져오고자 함 
 #jwt:
 #  expiration_time: 864000 # one day (60s * 60m * 24h * 1000)
