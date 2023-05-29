@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -35,13 +36,16 @@ public class SecurityConfig {
 
     private final AuthenticationConfiguration authenticationConfiguration;
     private final UserDetailsService userDetailsService;
-
+    private final Environment env;
     private final String LOGIN_URL = "/api/v1/login";
     private final String LOGOUT_URL = "/api/v1/logout";
 
-    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration, @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService) {
+    public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
+                          @Qualifier("userDetailsServiceImpl") UserDetailsService userDetailsService,
+                          Environment env) {
         this.authenticationConfiguration = authenticationConfiguration;
         this.userDetailsService = userDetailsService;
+        this.env = env;
     }
 
     private final String[] WHITE_LIST = new String[]{
@@ -50,6 +54,7 @@ public class SecurityConfig {
             "/health_check",
             "/api/v1/user/sign-up",
             "/api/v1/user/**", // 임시
+            "/**", // 임시
     };
 
     @Bean
@@ -122,7 +127,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationSuccessHandler ajaxAuthenticationSuccessHandler() {
-        return new AjaxAuthenticationSuccessHandler();
+        return new AjaxAuthenticationSuccessHandler(env);
     }
 
     @Bean
