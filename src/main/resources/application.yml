@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  rabbitmq:
+    host: 127.9.9.1
+    port: 5672
+    username: guest
+    password: guest
   datasource:
     url: jdbc:h2:mem:~/jimartdb
     driver-class-name: org.h2.Driver
@@ -30,7 +35,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
 # spring cloud config service에서 가져오고자 함 
 #jwt:
 #  expiration_time: 864000 # one day (60s * 60m * 24h * 1000)
