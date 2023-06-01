@@ -32,6 +32,10 @@ eureka:
 greeting:
   message: Welcome to Jimart Project
 
+logging:
+  level:
+    com.jimart.userservice.domain.user.client: DEBUG
+
 management:
   endpoints:
     web:
