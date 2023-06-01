@@ -2,6 +2,7 @@ package com.jimart.userservice.domain.user.service;
 
 import com.jimart.userservice.core.common.ApiResponse;
 import com.jimart.userservice.core.exception.CustomException;
+import com.jimart.userservice.domain.user.client.UserOrderServiceClient;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import com.jimart.userservice.domain.user.dto.OrderResDto;
 import com.jimart.userservice.domain.user.dto.UserDto;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final Environment env;
+    private final UserOrderServiceClient userOrderServiceClient;
 
     @Override
     public UserResDto saveUser(UserDto request) {
@@ -86,23 +88,25 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOrderResDto findUserWithOrders(String userId) {
         UserResDto findUser = findByUserId(userId);
-
-        String orderServiceUrl = env.getProperty("order_service.url");
-        if (!StringUtils.hasText(orderServiceUrl)) {
-            throw new CustomException(PROPERTY_NOT_FOUND);
-        }
-        String orderUrl = String.format(orderServiceUrl, userId);
-
-        ResponseEntity<ApiResponse<List<OrderResDto>>> orderResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
-        });
-        List<OrderResDto> orders = orderResponse.getBody().getData();
-        UserOrderResDto userOrders = UserOrderResDto.builder()
+//        List<OrderResDto> ordersByRestTemplate = getOrdersByRestTemplate(userId);
+        List<OrderResDto> ordersByFeignClient = userOrderServiceClient.getUserOrders(userId).getData();
+        return UserOrderResDto.builder()
                 .userId(findUser.getUserId())
                 .name(findUser.getName())
                 .email(findUser.getEmail())
                 .authority(findUser.getAuthority())
-                .orders(orders)
+                .orders(ordersByFeignClient)
                 .build();
-        return userOrders;
+    }
+
+    private List<OrderResDto> getOrdersByRestTemplate(String userId) {
+        String rawOrderServiceUrl = env.getProperty("order_service.url");
+        if (!StringUtils.hasText(rawOrderServiceUrl)) {
+            throw new CustomException(PROPERTY_NOT_FOUND);
+        }
+        String orderUrl = String.format(rawOrderServiceUrl, userId);
+        ResponseEntity<ApiResponse<List<OrderResDto>>> orderResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+        return orderResponse.getBody().getData();
     }
 }
