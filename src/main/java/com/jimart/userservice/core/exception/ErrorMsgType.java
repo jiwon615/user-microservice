@@ -11,6 +11,8 @@ public enum ErrorMsgType {
 
     // common
     COMMON_SERVER_ERROR(INTERNAL_SERVER_ERROR, "서버 오류가 발생했습니다."),
+    PROPERTY_NOT_FOUND(NOT_FOUND, "해당 프로퍼티 정보를 찾지 못했습니다."),
+
     // user
     USER_DUPLICATED(BAD_REQUEST, "이미 존재하는 아이디입니다."),
     USER_NOT_FOUND(BAD_REQUEST, "존재하지 않는 회원입니다."),

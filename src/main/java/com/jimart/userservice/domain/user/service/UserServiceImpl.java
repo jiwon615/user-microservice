@@ -1,21 +1,29 @@
 package com.jimart.userservice.domain.user.service;
 
+import com.jimart.userservice.core.common.ApiResponse;
 import com.jimart.userservice.core.exception.CustomException;
-import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
+import com.jimart.userservice.domain.user.dto.OrderResDto;
 import com.jimart.userservice.domain.user.dto.UserDto;
+import com.jimart.userservice.domain.user.dto.UserOrderResDto;
 import com.jimart.userservice.domain.user.dto.UserResDto;
+import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.jimart.userservice.core.exception.ErrorMsgType.USER_DUPLICATED;
-import static com.jimart.userservice.core.exception.ErrorMsgType.USER_NOT_FOUND;
+import static com.jimart.userservice.core.exception.ErrorMsgType.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +31,8 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
+    private final Environment env;
 
     @Override
     public UserResDto saveUser(UserDto request) {
@@ -71,5 +81,28 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String userId) {
         Optional<User> userOpt = userRepository.findByUserId(userId);
         userOpt.ifPresent(userRepository::delete);
+    }
+
+    @Override
+    public UserOrderResDto findUserWithOrders(String userId) {
+        UserResDto findUser = findByUserId(userId);
+
+        String orderServiceUrl = env.getProperty("order_service.url");
+        if (!StringUtils.hasText(orderServiceUrl)) {
+            throw new CustomException(PROPERTY_NOT_FOUND);
+        }
+        String orderUrl = String.format(orderServiceUrl, userId);
+
+        ResponseEntity<ApiResponse<List<OrderResDto>>> orderResponse = restTemplate.exchange(orderUrl, HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+        List<OrderResDto> orders = orderResponse.getBody().getData();
+        UserOrderResDto userOrders = UserOrderResDto.builder()
+                .userId(findUser.getUserId())
+                .name(findUser.getName())
+                .email(findUser.getEmail())
+                .authority(findUser.getAuthority())
+                .orders(orders)
+                .build();
+        return userOrders;
     }
 }

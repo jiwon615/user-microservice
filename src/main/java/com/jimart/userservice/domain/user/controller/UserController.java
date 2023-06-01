@@ -2,6 +2,7 @@ package com.jimart.userservice.domain.user.controller;
 
 import com.jimart.userservice.core.common.ApiResponse;
 import com.jimart.userservice.domain.user.dto.UserCreateReqDto;
+import com.jimart.userservice.domain.user.dto.UserOrderResDto;
 import com.jimart.userservice.domain.user.dto.UserResDto;
 import com.jimart.userservice.domain.user.dto.UserUpdateReqDto;
 import com.jimart.userservice.domain.user.service.UserService;
@@ -43,5 +44,10 @@ public class UserController {
     public ApiResponse<Void> deleteUser(@PathVariable(name = "userId") String userId) {
         userService.deleteUser(userId);
         return ApiResponse.ok();
+    }
+
+    @GetMapping("{userId}/orders")
+    public ApiResponse<UserOrderResDto> getUserOrders(@PathVariable(name = "userId") String userId) {
+        return ApiResponse.ok(userService.findUserWithOrders(userId));
     }
 }
