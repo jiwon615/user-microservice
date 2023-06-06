@@ -11,6 +11,7 @@ import com.jimart.userservice.domain.user.dto.UserResDto;
 import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,6 +32,7 @@ import static com.jimart.userservice.core.exception.ErrorMsgType.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -95,9 +97,11 @@ public class UserServiceImpl implements UserService {
 //        List<OrderResDto> orders = getOrdersByRestTemplate(userId); // orders By RestTemplate
 //        List<OrderResDto> orders = userOrderServiceClient.getUserOrders(userId).getData(); // orders By FeignClient + ErrorDecoder
 
+        log.info("=== Order Microservice 호출 전 ===");
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
         List<OrderResDto> orders = circuitbreaker.run(() -> userOrderServiceClient.getUserOrders(userId).getData(),
                 throwable -> new ArrayList<>());
+        log.info("=== Order Microservice 호출 후 ===");
 
         return UserOrderResDto.builder()
                 .userId(findUser.getUserId())
