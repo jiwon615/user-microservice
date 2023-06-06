@@ -11,6 +11,8 @@ import com.jimart.userservice.domain.user.dto.UserResDto;
 import com.jimart.userservice.domain.user.entity.User;
 import com.jimart.userservice.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final RestTemplate restTemplate;
     private final Environment env;
     private final UserOrderServiceClient userOrderServiceClient;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
     public UserResDto saveUser(UserDto request) {
@@ -88,14 +92,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOrderResDto findUserWithOrders(String userId) {
         UserResDto findUser = findByUserId(userId);
-//        List<OrderResDto> ordersByRestTemplate = getOrdersByRestTemplate(userId);
-        List<OrderResDto> ordersByFeignClient = userOrderServiceClient.getUserOrders(userId).getData();
+//        List<OrderResDto> orders = getOrdersByRestTemplate(userId); // orders By RestTemplate
+//        List<OrderResDto> orders = userOrderServiceClient.getUserOrders(userId).getData(); // orders By FeignClient + ErrorDecoder
+
+        CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
+        List<OrderResDto> orders = circuitbreaker.run(() -> userOrderServiceClient.getUserOrders(userId).getData(),
+                throwable -> new ArrayList<>());
+
         return UserOrderResDto.builder()
                 .userId(findUser.getUserId())
                 .name(findUser.getName())
                 .email(findUser.getEmail())
                 .authority(findUser.getAuthority())
-                .orders(ordersByFeignClient)
+                .orders(orders)
                 .build();
     }
 
