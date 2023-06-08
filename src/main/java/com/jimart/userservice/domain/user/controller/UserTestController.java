@@ -1,6 +1,7 @@
 package com.jimart.userservice.domain.user.controller;
 
 import com.jimart.userservice.domain.user.dto.Greeting;
+import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ public class UserTestController {
     private final Greeting greeting;
 
     @GetMapping("/health_check")
+    @Timed(value="users.status", longTask = true)
     public String status() {
         return String.format("It's Working in User Service : " +
                         "localServerPort => %s, " +
@@ -28,6 +30,7 @@ public class UserTestController {
     }
 
     @GetMapping("/welcome")
+    @Timed(value="users.welcome", longTask = true)
     public String welcome() {
         return env.getProperty("greeting.message");
     }
