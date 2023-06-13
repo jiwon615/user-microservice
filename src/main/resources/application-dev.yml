@@ -1,0 +1,19 @@
+spring:
+  cloud:
+    config:
+      uri: http://config-service:8888
+      name: user-service
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
+  zipkin:
+    base-url: http://zipkin:9411
+eureka:
+  instance:
+    client:
+      service-url:
+        defaultZone: http://jimart-eureka-service:8761/eureka
+logging:
+  file: /api-logs/users-ws.log

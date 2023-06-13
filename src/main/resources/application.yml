@@ -4,6 +4,10 @@ server:
 spring:
   application:
     name: user-service
+  cloud:
+    config:
+      uri: http://127.0.0.1:8888
+      name: user-service  # config-server의 application name을 명시하게 되면 application.yml을 읽음
   rabbitmq:
     host: 127.0.0.1
     port: 5672
