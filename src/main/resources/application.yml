@@ -7,18 +7,12 @@ spring:
   cloud:
     config:
       uri: http://127.0.0.1:8888
-      name: user-service  # config-server의 application name을 명시하게 되면 application.yml을 읽음
+      name: user-service
   rabbitmq:
     host: 127.0.0.1
     port: 5672
     username: guest
     password: guest
-# config가 인식하는 설정정보파일에 아래 정보 옮김
-#  datasource:
-#    url: jdbc:h2:mem:~/jimartdb
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
   h2:
     console:
       enabled: true
@@ -54,7 +48,3 @@ management:
   tracing:
     sampling:
       probability: 1.0
-# spring cloud config service에서 가져오고자 함 
-#jwt:
-#  expiration_time: 864000 # one day (60s * 60m * 24h * 1000)
-#  secret: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXR1dG9yaWFsLWppd29vbi1zcHJpbmctYm9vdC1zZWN1cml0eS1qd3QtdHV0b3JpYWwK=

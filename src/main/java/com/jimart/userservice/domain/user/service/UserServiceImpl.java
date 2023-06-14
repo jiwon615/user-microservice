@@ -2,7 +2,7 @@ package com.jimart.userservice.domain.user.service;
 
 import com.jimart.userservice.core.common.ApiResponse;
 import com.jimart.userservice.core.exception.CustomException;
-import com.jimart.userservice.domain.user.client.UserOrderServiceClient;
+import com.jimart.userservice.domain.user.client.OrderServiceClient;
 import com.jimart.userservice.domain.user.constant.UserAuthorityType;
 import com.jimart.userservice.domain.user.dto.OrderResDto;
 import com.jimart.userservice.domain.user.dto.UserDto;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
     private final Environment env;
-    private final UserOrderServiceClient userOrderServiceClient;
+    private final OrderServiceClient orderServiceClient;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Override
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
 
         log.info("=== Order Microservice 호출 전 ===");
         CircuitBreaker circuitbreaker = circuitBreakerFactory.create("circuitbreaker");
-        List<OrderResDto> orders = circuitbreaker.run(() -> userOrderServiceClient.getUserOrders(userId).getData(),
+        List<OrderResDto> orders = circuitbreaker.run(() -> orderServiceClient.getUserOrders(userId).getData(),
                 throwable -> new ArrayList<>());
         log.info("=== Order Microservice 호출 후 ===");
 
