@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class LoggerConfig {
+public class FeignLogConfig {
 
     @Bean
     public Logger.Level feignLoggerLevel() {
